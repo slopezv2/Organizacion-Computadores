@@ -13,15 +13,19 @@ MSG 1. Ingresar posicion inicial para el caballo (ver matriz de arriba)
 MSG 2. Llenado de la matriz mediante saltos de caballo
 MSG 3. Mostrar Contenido de la matriz
 LDT Ingrese la opcion(1, 2 o 3)
-CMP A01
+CMP A02
 JME 170
 JMA 18B
 
 HLT
 #170
+PUSH AX
+#18A
+0000000000000000;CONTADOR
 #18B
 
 #A00
+0000000000000000;NUMERO 0
 0000000000000001;NUMERO 1
 0000000000000010;NUMERO 2
 0000000000000011;NUMERO 3

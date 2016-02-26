@@ -1,5 +1,5 @@
 #SimuProc 1.4.2.0
-MSG Menu
+MSG Menu ;Inicio
 MSG  ---------
 MSG  |1|2|3|4|
 MSG  ---------
@@ -12,28 +12,29 @@ MSG  --------
 MSG 1. Ingresar posicion inicial para el caballo (ver matriz de arriba)
 MSG 2. Llenado de la matriz mediante saltos de caballo
 MSG 3. Mostrar Contenido de la matriz
-LDT Ingrese la opcion(1, 2 o 3)
-CMP A02
-JME 100 ;INCOMPLETO
+LDT Ingrese la opcion(1, 2 o 3) ; Le pide input a usuario
+CMP A02 ; compara con 2
+JME 100 ; si menor que 2, o sea 1 salta
 JMA 250;TODO CREAR NUEVA OPCION
-HLT
+HLT   ;Salir del programa
 #100
-LDT INGRESE EL NUMERO DE LA CASILLA (1-16)
-PUSH AX
-STA 19C
-INC 19D
+LDT INGRESE EL NUMERO DE LA CASILLA (1-16)  ;input casilla
+PUSH AX  ;Meter en pila
+STA 19C  ; me guarda em la variable de pos cual elemento ingreso usuario
+INC 19D  ; incrementar contador de pila
 #104
-DIV A04
-STA 19E
-MOV AX,BX
-CMP A00
-JMA 146
-MOV AA1,A04
-MOV AA0,19E
-MOV 19A,A00
-MOV 19B,AA1
-MOV 19E,A00
-JMP 020
+; Conversion de numero a coord i j matriz
+DIV A04      ;division por 4
+STA 19E      ; guardo resultado
+MOV AX,BX    ; paso a ax el modulo
+CMP A00      ; si modulo es cero
+JMA 146      ; Si no es calculo sencillo
+MOV AA1,A04  ; set pos j variable
+MOV AA0,19E  ; set pos i variable
+MOV 19A,A00  ; set pos i estatica
+MOV 19B,AA1  ; set pos i estatica
+MOV 19E,A00  ;limpiar varible aux
+JMP 020       ; voy a buscar posibles saltos
 #110
 ;PASAR DE COORD I J A NUMERO
 LDA AA0
@@ -59,7 +60,7 @@ PUSH AX;INSERTAR EN PILA
 EAP
 INC 19D
 LDA 19D
-CMP A0B
+CMP A0A  ; MIRAR SI LLEVO 16 ELEMENTOS
 JEQ 011
 MOV 19A,AA0
 MOV 19B,AA1
@@ -96,10 +97,13 @@ JMP 150
 DEC 19D
 MOV BX,19D
 LDB F7F
+MSG Rollback!
+EAP
 STA 19C
+INC 19D
 JMP 104
 #020
-;MOVIMIENTO 8
+;MOVIMIENTO 8: 2 izquierda, 1 abajo
 MOV 19F,A08
 MOV AA0,19A
 MOV AA1,19B
@@ -116,7 +120,7 @@ STA AA1
 JMP B00
 
 #030
-;MOVIMIENTO 7
+;MOVIMIENTO 7:  2 derecha, 1 abajo
 MOV 19F,A07
 MOV AA0,19A
 MOV AA1,19B
@@ -129,7 +133,7 @@ ADD A02
 STA AA1
 JMP B10
 #040
-;MOVIMIENTO 6
+;MOVIMIENTO 6: 2 abajo, 1 izquierda
 MOV 19F,A06
 MOV AA0,19A
 MOV AA1,19B
@@ -146,7 +150,7 @@ STA AA1
 JMP B20
 
 #050
-;Movimiento 5
+;Movimiento 5 : 2 abajo, 1 derecha
 MOV 19F,A05
 MOV AA0,19A
 MOV AA1,19B
@@ -160,7 +164,7 @@ STA AA1
 JMP B30
 
 #05E
-;Movimiento 4  ERROR DEMASIADO GRANDE CHOQUE ABAJO
+;Movimiento 4 : 1 arriba, 2 izquierda
 MOV 19F,A04
 MOV AA0,19A
 MOV AA1,19B
@@ -180,7 +184,7 @@ STA AA1
 JMP B40
 
 #070
-;Movimiento 3
+;Movimiento 3  ; 1 arriba, 2 derecha
 MOV 19F,A03
 MOV AA0,19A
 MOV AA1,19B
@@ -197,7 +201,7 @@ STA AA1
 JMP B50
 
 #080
-;Movimiento 2
+;Movimiento 2  ; dos arriba, una derecha
 MOV 19F,A02
 MOV AA0,19A
 MOV AA1,19B
@@ -214,7 +218,7 @@ STA AA1
 JMP B60
 
 #090
-;MovImiento 1
+;MovImiento 1  ; dos arriba, 1 izquierda
 MOV 19F,A01
 MOV AA0,19A
 MOV AA1,19B
@@ -377,7 +381,6 @@ JMP 110
 0000000000000010;NUMERO 2
 0000000000000011;NUMERO 3
 0000000000000100;NUMERO 4
-0000000000000000;NUMERO 0
 0000000000000101;NUMERO 5 **
 0000000000000110;NUMERO 6
 0000000000000111;NUMERO 7
